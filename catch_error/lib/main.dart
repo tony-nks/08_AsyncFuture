@@ -28,7 +28,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var file = 'assets/test1.txt';
+  var file = 'assets/data2.txt';
   @override
   Widget build(BuildContext context) {
 
@@ -40,14 +40,14 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           RaisedButton(
-              child: Text('test good file'),
+              child: Text('Button 1'),
               onPressed: () {
                 setState(() {
                   file = 'assets/artists.txt';
                 });
               }),
           RaisedButton(
-              child: Text('test bad file'),
+              child: Text('Button 2'),
               onPressed: () {
                 setState(() {
                   file = 'assets/data.txt';
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                     return Center(
-                      child: Text('NONE'),
+                      child: Text('none'),
                     );
                     break;
                   case ConnectionState.waiting:
