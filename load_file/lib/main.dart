@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String name = '';
+  dynamic result;
   
   final poiskController = TextEditingController();
   @override
@@ -71,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onTap: () {
                                 setState((){
                                     name = poiskController.text;
+                                    result = fetchFileFromAssets('assets/$name.txt');
                                 });
                             },
                             child: Text(
@@ -86,12 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder<String>(
-                  future: fetchFileFromAssets('assets/$name.txt'),
+                  future: result,
                     builder: (BuildContext context, AsyncSnapshot snapshot){
                       switch (snapshot.connectionState) {
                         case ConnectionState.none:
                           return Center(
-                            child: Text('NONE'),
+                            child: Text('Подключение потсутсвуте, пожалуйтса введите имя файла и нажмите Найти'),
                           );
                           break;
                         case ConnectionState.waiting:

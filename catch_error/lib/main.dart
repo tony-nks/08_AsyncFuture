@@ -29,9 +29,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var file = 'assets/data2.txt';
+
+  dynamic result;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Catch error'),
@@ -44,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 setState(() {
                   file = 'assets/artists.txt';
+                  result = fetchFileFromAssets(file);
                 });
               }),
           RaisedButton(
@@ -51,23 +53,24 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 setState(() {
                   file = 'assets/data.txt';
+                  result = fetchFileFromAssets(file);
                 });
               }),
           Expanded(
             child: FutureBuilder<String>(
-              future: fetchFileFromAssets(file),
+              future: result,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                     return Center(
-                      child: Text('none'),
+                      child: snapshot.data,
                     );
                     break;
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                     break;
                   case ConnectionState.done:
-                      return Text(snapshot.data);
+                    return Text(snapshot.data);
                     break;
                   default:
                     return SingleChildScrollView(
