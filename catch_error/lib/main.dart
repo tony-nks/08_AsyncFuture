@@ -28,9 +28,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var file = 'assets/data2.txt';
+  var file = 'assets/data3.txt';
+  Future<String> _dataFuture;
+  @override
+  void initState() {
+    super.initState();
+    _dataFuture = fetchFileFromAssets(file);
+  }
 
-  dynamic result;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,25 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          RaisedButton(
-              child: Text('Button 1'),
-              onPressed: () {
-                setState(() {
-                  file = 'assets/artists.txt';
-                  result = fetchFileFromAssets(file);
-                });
-              }),
-          RaisedButton(
-              child: Text('Button 2'),
-              onPressed: () {
-                setState(() {
-                  file = 'assets/data.txt';
-                  result = fetchFileFromAssets(file);
-                });
-              }),
           Expanded(
             child: FutureBuilder<String>(
-              future: result,
+              future: _dataFuture,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -70,7 +59,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Center(child: CircularProgressIndicator());
                     break;
                   case ConnectionState.done:
-                    return Text(snapshot.data);
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: Text(snapshot.data)),
+                    );
                     break;
                   default:
                     return SingleChildScrollView(

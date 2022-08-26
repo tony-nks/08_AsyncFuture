@@ -31,8 +31,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String name = '';
-  dynamic result;
-  
+  String result = '';
+  Future<String> _dataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _dataFuture = fetchFileFromAssets('assets/$name.txt');
+  }
+
   final poiskController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -48,21 +55,21 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 decoration: BoxDecoration(
                     color: Colors.transparent,
-                    borderRadius: new BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(color: Colors.black, width: 2.0)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: TextField(
-                            controller: poiskController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        )),
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: poiskController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    )),
                     Container(
                         color: Colors.black,
                         child: Padding(
@@ -70,15 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               left: 40.0, right: 40.0, top: 15, bottom: 15),
                           child: GestureDetector(
                             onTap: () {
-                                setState((){
-                                    name = poiskController.text;
-                                    result = fetchFileFromAssets('assets/$name.txt');
-                                });
+                              setState(() {
+                                name = poiskController.text;
+                                _dataFuture = fetchFileFromAssets('assets/$name.txt');
+                              });
                             },
                             child: Text(
                               'Найти',
                               style:
-                              TextStyle(color: Colors.white, fontSize: 16),
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
                           ),
                         )),
@@ -88,27 +95,28 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder<String>(
-                  future: result,
-                    builder: (BuildContext context, AsyncSnapshot snapshot){
+                    future: _dataFuture,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
                       switch (snapshot.connectionState) {
                         case ConnectionState.none:
                           return Center(
-                            child: Text('Подключение потсутсвуте, пожалуйтса введите имя файла и нажмите Найти'),
+                            child: Text(
+                                'Подключение потсутсвуте, пожалуйтса введите имя файла и нажмите Найти'),
                           );
                           break;
                         case ConnectionState.waiting:
                           return Center(child: CircularProgressIndicator());
                           break;
                         case ConnectionState.done:
-                          return SingleChildScrollView(child: Text(snapshot.data));
+                          return SingleChildScrollView(
+                              child: Text(snapshot.data));
                           break;
                         default:
                           return SingleChildScrollView(
                             child: Text('Default'),
                           );
                       }
-                    }
-                ),
+                    }),
               )
             ],
           ),
