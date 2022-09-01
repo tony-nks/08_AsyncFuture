@@ -34,10 +34,11 @@ class _MyHomePageState extends State<MyHomePage> {
   String result = '';
   Future<String> _dataFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    _dataFuture = fetchFileFromAssets('assets/$name.txt');
+  void onFindTap(){
+    setState((){
+      name = poiskController.text;
+      _dataFuture = fetchFileFromAssets('assets/$name.txt');
+    });
   }
 
   final poiskController = TextEditingController();
@@ -76,12 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: const EdgeInsets.only(
                               left: 40.0, right: 40.0, top: 15, bottom: 15),
                           child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                name = poiskController.text;
-                                _dataFuture = fetchFileFromAssets('assets/$name.txt');
-                              });
-                            },
+                            onTap: onFindTap,
                             child: Text(
                               'Найти',
                               style:
@@ -101,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         case ConnectionState.none:
                           return Center(
                             child: Text(
-                                'Подключение потсутсвуте, пожалуйтса введите имя файла и нажмите Найти'),
+                                'Подключение отсутсвуте, пожалуйтса введите имя файла и нажмите Найти'),
                           );
                           break;
                         case ConnectionState.waiting:
